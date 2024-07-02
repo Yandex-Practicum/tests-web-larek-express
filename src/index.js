@@ -76,7 +76,7 @@ const app = async (projectPath, lng) => {
         'trim_trailing_whitespace = false',
         'insert_final_newline = true',
       ]),
-      //checkEslint(projectBackendPath),
+      checkEslint(projectBackendPath),
     ]))
       .filter(Boolean)
       .flat();

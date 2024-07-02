@@ -3,6 +3,7 @@
 source $DIR_TESTS/bin/scripts.sh
 
 echo "УСТАНОВКА ЗАВИСИМОСТЕЙ"
+npm ci --prefix $GITHUB_WORKSPACE/backend
 npm ci --prefix $DIR_TESTS > /dev/null
 
 echo "ЗАПУСК ТЕСТОВ"
