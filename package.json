@@ -1,0 +1,21 @@
+{
+  "name": "tests-web-larek-express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "lint:eslint": "npx eslint ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hexlet/immutable-fs-trees": "^0.7.2",
+    "depcheck": "^1.4.7",
+    "directory-tree": "^3.5.1",
+    "i18next": "^23.11.5",
+    "shelljs": "^0.8.5",
+    "simple-git": "^3.25.0"
+  }
+}

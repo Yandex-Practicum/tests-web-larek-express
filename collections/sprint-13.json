@@ -1,0 +1,1077 @@
+{
+	"info": {
+		"_postman_id": "4482d328-6c91-4926-97e5-59aa6bbd5000",
+		"name": "web-larek-express-13",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16979177"
+	},
+	"item": [
+		{
+			"name": "product",
+			"item": [
+				{
+					"name": "[+] [POST] Добавление товара",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"В ответе содержится id созданного товара\", () => {",
+									"    const product = utils.getData(pm.response.json());",
+									"",
+									"    pm.expect(product).to.have.property('_id');",
+									"",
+									"    pm.collectionVariables.set(\"product_id\", product._id);",
+									"    pm.collectionVariables.set(\"product_price\", product.price);",
+									"    pm.collectionVariables.set(\"product_title\", product.title);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"{{$randomLoremSentence}}\",\n    \"image\": {\n      \"fileName\": \"/images/image.png\",\n      \"originalName\": \"image.png\"\n    },\n    \"title\": \"{{$randomProductName}}\",\n    \"category\": \"{{$randomDepartment}}\",\n    \"price\": {{$randomInt}}\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/product/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[+] [POST] Добавление товара без цены",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"В ответе содержится id созданного товара\", () => {",
+									"    const product = utils.getData(pm.response.json());",
+									"",
+									"    pm.expect(product).to.have.property('_id');",
+									"",
+									"    pm.collectionVariables.set(\"product_id_without_price\", product._id);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"{{$randomLoremSentence}}\",\n    \"image\": {\n      \"fileName\": \"/images/image.png\",\n      \"originalName\": \"image.png\"\n    },\n    \"title\": \"{{$randomProductName}}\",\n    \"category\": \"{{$randomDepartment}}\"\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/product/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[-] [POST] Добавление товара без обязательного поля title",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Проверка возврата поля message\", () => {",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.collectionVariables.get(\"schema_message_only\")))",
+									"});",
+									"",
+									"pm.test(\"Ответ содержит message длинной больше 1 символа\", () => {",
+									"    const response = utils.getData(pm.response.json());",
+									"",
+									"    pm.expect(response.message).to.be.a(\"string\")",
+									"    pm.expect(response.message.length).to.greaterThan(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"{{$randomLoremSentence}}\",\n    \"image\": {\n      \"fileName\": \"/images/image.png\",\n      \"originalName\": \"image.png\"\n    },\n    \"category\": \"{{$randomDepartment}}\",\n    \"price\": {{$randomInt}}\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/product/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[-] [POST] Добавление товара с полем title меньше 2 символов",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Проверка возврата поля message\", () => {",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.collectionVariables.get(\"schema_message_only\")))",
+									"});",
+									"",
+									"pm.test(\"Ответ содержит message длинной больше 1 символа\", () => {",
+									"    const response = utils.getData(pm.response.json());",
+									"",
+									"    pm.expect(response.message).to.be.a(\"string\")",
+									"    pm.expect(response.message.length).to.greaterThan(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"{{$randomLoremSentence}}\",\n    \"image\": {\n      \"fileName\": \"/images/image.png\",\n      \"originalName\": \"image.png\"\n    },\n    \"title\": \"{{$randomAlphaNumeric}}\",\n    \"category\": \"{{$randomDepartment}}\",\n    \"price\": {{$randomInt}}\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/product/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[-] [POST] Добавление товара с полем title больше 30 символов",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Проверка возврата поля message\", () => {",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.collectionVariables.get(\"schema_message_only\")))",
+									"});",
+									"",
+									"pm.test(\"Ответ содержит message длинной больше 1 символа\", () => {",
+									"    const response = utils.getData(pm.response.json());",
+									"",
+									"    pm.expect(response.message).to.be.a(\"string\")",
+									"    pm.expect(response.message.length).to.greaterThan(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"{{$randomLoremSentence}}\",\n    \"image\": {\n      \"fileName\": \"/images/image.png\",\n      \"originalName\": \"image.png\"\n    },\n    \"title\": \"{{$randomLoremSentences}}\",\n    \"category\": \"{{$randomDepartment}}\",\n    \"price\": {{$randomInt}}\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/product/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[-] [POST] Добавление товара без обязательного поля category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Проверка возврата поля message\", () => {",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.collectionVariables.get(\"schema_message_only\")))",
+									"});",
+									"",
+									"pm.test(\"Ответ содержит message длинной больше 1 символа\", () => {",
+									"    const response = utils.getData(pm.response.json());",
+									"",
+									"    pm.expect(response.message).to.be.a(\"string\")",
+									"    pm.expect(response.message.length).to.greaterThan(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"{{$randomLoremSentence}}\",\n    \"image\": {\n      \"fileName\": \"/images/image.png\",\n      \"originalName\": \"image.png\"\n    },\n    \"title\": \"{{$randomProductName}}\",\n    \"price\": {{$randomInt}}\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/product/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[-] [POST] Добавление товара без обязательного поля image",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Проверка возврата поля message\", () => {",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.collectionVariables.get(\"schema_message_only\")))",
+									"});",
+									"",
+									"pm.test(\"Ответ содержит message длинной больше 1 символа\", () => {",
+									"    const response = utils.getData(pm.response.json());",
+									"",
+									"    pm.expect(response.message).to.be.a(\"string\")",
+									"    pm.expect(response.message.length).to.greaterThan(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"{{$randomLoremSentence}}\",\n    \"title\": \"{{$randomProductName}}\",\n    \"category\": \"{{$randomDepartment}}\",\n    \"price\": {{$randomInt}}\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/product/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[-] [POST] Добавление товара дубликата",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 409\", function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"",
+									"pm.test(\"Проверка возврата поля message\", () => {",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.collectionVariables.get(\"schema_message_only\")))",
+									"});",
+									"",
+									"pm.test(\"Ответ содержит message длинной больше 1 символа\", () => {",
+									"    const response = utils.getData(pm.response.json());",
+									"",
+									"    pm.expect(response.message).to.be.a(\"string\")",
+									"    pm.expect(response.message.length).to.greaterThan(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"{{$randomLoremSentence}}\",\n    \"image\": {\n      \"fileName\": \"/images/image.png\",\n      \"originalName\": \"image.png\"\n    },\n    \"title\": \"{{product_title}}\",\n    \"category\": \"{{$randomDepartment}}\",\n    \"price\": {{$randomInt}}\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/product/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[+] [GET] Получение списка товаров",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Список товаров\", () => {",
+									"    const response = utils.getData(pm.response.json());",
+									"    pm.expect(response.items).to.be.an(\"array\");",
+									"});",
+									"",
+									"pm.test(\"В total количество товаров равно количеству элементов в массиве items\", () => {",
+									"    const response = utils.getData(pm.response.json());",
+									"    pm.expect(response.items.length).to.eql(response.total);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/product/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"product",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "[+] [POST] Оформление заказа",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"В ответе содержится id и сумма заказа\", () => {",
+									"    const response = utils.getData(pm.response.json());",
+									"    ",
+									"    pm.expect(response).to.have.property(\"id\");",
+									"    pm.expect(response).to.have.property(\"total\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment\": \"online\",\n    \"email\": \"{{$randomEmail}}\",\n    \"phone\": \"+71234567890\",\n    \"address\": \"{{$randomStreetAddress}}\",\n    \"total\": {{product_price}},\n    \"items\": [\n        \"{{product_id}}\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/order/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"order",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[-] [POST] Оформление заказа c несуществующим товаром",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Проверка возврата поля message\", () => {",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.collectionVariables.get(\"schema_message_only\")))",
+									"});",
+									"",
+									"pm.test(\"Ответ содержит message длинной больше 1 символа\", () => {",
+									"    const response = utils.getData(pm.response.json());",
+									"",
+									"    pm.expect(response.message).to.be.a(\"string\")",
+									"    pm.expect(response.message.length).to.greaterThan(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment\": \"online\",\n    \"email\": \"{{$randomEmail}}\",\n    \"phone\": \"+71234567890\",\n    \"address\": \"{{$randomStreetAddress}}\",\n    \"total\": {{product_price}},\n    \"items\": [\n        \"{{product_id_wrong}}\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/order/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"order",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[-] [POST] Оформление заказа c товаром без цены",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Проверка возврата поля message\", () => {",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.collectionVariables.get(\"schema_message_only\")))",
+									"});",
+									"",
+									"pm.test(\"Ответ содержит message длинной больше 1 символа\", () => {",
+									"    const response = utils.getData(pm.response.json());",
+									"",
+									"    pm.expect(response.message).to.be.a(\"string\")",
+									"    pm.expect(response.message.length).to.greaterThan(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment\": \"online\",\n    \"email\": \"{{$randomEmail}}\",\n    \"phone\": \"+71234567890\",\n    \"address\": \"{{$randomStreetAddress}}\",\n    \"total\": 1000,\n    \"items\": [\n        \"{{product_id_without_price}}\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/order/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"order",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[-] [POST] Оформление заказа c неправильной суммой",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Проверка возврата поля message\", () => {",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.collectionVariables.get(\"schema_message_only\")))",
+									"});",
+									"",
+									"pm.test(\"Ответ содержит message длинной больше 1 символа\", () => {",
+									"    const response = utils.getData(pm.response.json());",
+									"",
+									"    pm.expect(response.message).to.be.a(\"string\")",
+									"    pm.expect(response.message.length).to.greaterThan(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment\": \"online\",\n    \"email\": \"{{$randomEmail}}\",\n    \"phone\": \"+71234567890\",\n    \"address\": \"{{$randomStreetAddress}}\",\n    \"total\": 10000,\n    \"items\": [\n        \"{{product_id}}\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/order/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"order",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[-] [POST] Оформление заказа без обязательного поля address",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Проверка возврата поля message\", () => {",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.collectionVariables.get(\"schema_message_only\")))",
+									"});",
+									"",
+									"pm.test(\"Ответ содержит message длинной больше 1 символа\", () => {",
+									"    const response = utils.getData(pm.response.json());",
+									"",
+									"    pm.expect(response.message).to.be.a(\"string\")",
+									"    pm.expect(response.message.length).to.greaterThan(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment\": \"online\",\n    \"email\": \"{{$randomEmail}}\",\n    \"phone\": \"+71234567890\",\n    \"total\": {{product_price}},\n    \"items\": [\n        \"{{product_id}}\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/order/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"order",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[-] [POST] Оформление заказа без обязательного поля phone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Проверка возврата поля message\", () => {",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.collectionVariables.get(\"schema_message_only\")))",
+									"});",
+									"",
+									"pm.test(\"Ответ содержит message длинной больше 1 символа\", () => {",
+									"    const response = utils.getData(pm.response.json());",
+									"",
+									"    pm.expect(response.message).to.be.a(\"string\")",
+									"    pm.expect(response.message.length).to.greaterThan(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment\": \"online\",\n    \"email\": \"{{$randomEmail}}\",\n    \"address\": \"{{$randomStreetAddress}}\",\n    \"total\": {{product_price}},\n    \"items\": [\n        \"{{product_id}}\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/order/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"order",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[-] [POST] Оформление заказа без обязательного поля email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Проверка возврата поля message\", () => {",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.collectionVariables.get(\"schema_message_only\")))",
+									"});",
+									"",
+									"pm.test(\"Ответ содержит message длинной больше 1 символа\", () => {",
+									"    const response = utils.getData(pm.response.json());",
+									"",
+									"    pm.expect(response.message).to.be.a(\"string\")",
+									"    pm.expect(response.message.length).to.greaterThan(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment\": \"online\",\n    \"phone\": \"+71234567890\",\n    \"address\": \"{{$randomStreetAddress}}\",\n    \"total\": {{product_price}},\n    \"items\": [\n        \"{{product_id}}\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/order/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"order",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[-] [POST] Оформление заказа без обязательного поля payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Проверка возврата поля message\", () => {",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.collectionVariables.get(\"schema_message_only\")))",
+									"});",
+									"",
+									"pm.test(\"Ответ содержит message длинной больше 1 символа\", () => {",
+									"    const response = utils.getData(pm.response.json());",
+									"",
+									"    pm.expect(response.message).to.be.a(\"string\")",
+									"    pm.expect(response.message.length).to.greaterThan(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{$randomEmail}}\",\n    \"phone\": \"+71234567890\",\n    \"address\": \"{{$randomStreetAddress}}\",\n    \"total\": {{product_price}},\n    \"items\": [\n        \"{{product_id}}\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/order/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"order",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[-] [POST] Оформление заказа с некорректным полем email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Проверка возврата поля message\", () => {",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.collectionVariables.get(\"schema_message_only\")))",
+									"});",
+									"",
+									"pm.test(\"Ответ содержит message длинной больше 1 символа\", () => {",
+									"    const response = utils.getData(pm.response.json());",
+									"",
+									"    pm.expect(response.message).to.be.a(\"string\")",
+									"    pm.expect(response.message.length).to.greaterThan(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment\": \"online\",\n    \"email\": \"{{email_wrong}}\",\n    \"phone\": \"+71234567890\",\n    \"address\": \"{{$randomStreetAddress}}\",\n    \"total\": {{product_price}},\n    \"items\": [\n        \"{{product_id}}\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/order/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"order",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[-] [POST] Оформление заказа с некорректным полем payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Проверка возврата поля message\", () => {",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.collectionVariables.get(\"schema_message_only\")))",
+									"});",
+									"",
+									"pm.test(\"Ответ содержит message длинной больше 1 символа\", () => {",
+									"    const response = utils.getData(pm.response.json());",
+									"",
+									"    pm.expect(response.message).to.be.a(\"string\")",
+									"    pm.expect(response.message.length).to.greaterThan(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment\": \"offline\",\n    \"email\": \"{{$randomEmail}}\",\n    \"phone\": \"+71234567890\",\n    \"address\": \"{{$randomStreetAddress}}\",\n    \"total\": {{product_price}},\n    \"items\": [\n        \"{{product_id}}\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/order/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"order",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"const schemaMessageOnly = {",
+					"    \"type\": \"object\",",
+					"    \"properties\": {",
+					"        \"message\": {",
+					"            \"type\": \"string\",",
+					"            \"minLength\": 1",
+					"        }",
+					"    },",
+					"    \"required\": [\"message\"]",
+					"};",
+					"",
+					"pm.collectionVariables.set(\"schema_message_only\", JSON.stringify(schemaMessageOnly));",
+					"",
+					"utils = {",
+					"    getData: (jsonData) => {",
+					"        if(Array.isArray(jsonData)) {",
+					"            return jsonData;",
+					"        }",
+					"",
+					"        const keys = Object.keys(jsonData);",
+					"        const firstKey = keys[0];",
+					"        const firstKeyValue = jsonData[firstKey];",
+					"",
+					"        return keys.length === 1 && typeof firstKeyValue === 'object' ? firstKeyValue : jsonData;",
+					"    }",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.test(\"В ответе приходит JSON-объект\", () => {",
+					"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost/api",
+			"type": "string"
+		},
+		{
+			"key": "schema_message_only",
+			"value": "{\"type\":\"object\",\"properties\":{\"message\":{\"type\":\"string\",\"minLength\":1}},\"required\":[\"message\"]}"
+		},
+		{
+			"key": "product_id_wrong",
+			"value": "15827a3ebe2995e6e008e346",
+			"type": "string"
+		},
+		{
+			"key": "email_wrong",
+			"value": "test@test",
+			"type": "string"
+		},
+		{
+			"key": "product_id",
+			"value": ""
+		},
+		{
+			"key": "product_price",
+			"value": ""
+		},
+		{
+			"key": "product_title",
+			"value": ""
+		},
+		{
+			"key": "product_id_without_price",
+			"value": ""
+		}
+	]
+}
